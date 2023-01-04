@@ -1,0 +1,163 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500&display=swap');
+html, body{
+  margin: 0;
+  font-family: 'Quicksand', sans-serif;
+  background-color: #E8F0F2;
+  color: #053742;
+}
+
+/* #E8F0F2 white */
+/* #A2DBFA light blue */
+/* #39A2DB blue */
+/* #053742 dark blue */
+
+.logo{
+  font-size: 25px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  color: #053742 !important;
+  text-decoration: none !important;
+}
+.logo > img{
+  max-width: 200px;
+  width: -webkit-fill-available;
+}
+.logo-home{
+  max-width: 300px !important;
+  width: -webkit-fill-available;
+}
+.app-container{
+  background-color: #E8F0F2;
+  height: 100vh;
+}
+.main-grid{
+  background-color: white;
+}
+.main-row{
+  height: 100vh;
+}
+.middle-col{
+  border-left: 1px solid #A2DBFA;
+  border-right: 1px solid #A2DBFA;
+}
+@media screen and (max-width: 1080px) and (min-width: 576px) {
+  .middle-col{
+    padding: 50px 20px !important;
+  }
+}
+@media screen and (max-width: 576px) {
+  .middle-col{
+    border: 0px;
+    border-top: 1px solid #A2DBFA;
+    border-bottom: 1px solid #A2DBFA;
+  }
+}
+.active{
+  background-color: #A2DBFA;
+  font-weight: 600;
+  letter-spacing: 2px;
+  border-right: 2px solid #39A2DB;
+  border-left: 2px solid #39A2DB;
+}
+.nav-item{
+  
+  color: #053742 !important;
+  text-decoration: none !important;
+}
+.nav-item:hover{
+  
+  background-color: white;
+}
+.nav-item:hover > .link-text{
+  transform: scale(1.1);
+
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -ms-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+@media screen and (min-width: 576px) and (max-width: 1080px) {
+  .nav-item,.logo-item  {
+     padding: 15px 5px !important; 
+    }  
+  body{
+    
+    font-size: small;
+  }
+  .logo{
+    font-size: medium;
+  }
+}
+
+.dashboard{
+  margin: 0;
+  margin-top: 20px;
+  padding: 10px;
+  background-color: white;
+  border-radius: 5px;
+}
+.weather-image-div{
+  padding: 10px 30px;
+  border-radius: 5px;
+}
+.weather-image{
+  max-height: 20vh;
+}
+@media screen and (min-width: 576px) and (max-width: 1080px) {
+  .weather-image-div{
+    padding: 5px;
+  }
+}
+.time-dropdown{
+  width: fit-content;
+  margin-inline: auto;
+}
+.bg-blue{
+  background-color: #39A2DB;
+}
+.parameters{
+  border-radius: 5px;
+  color: white;
+}
+
+/* ============================== About Us ============================== */
+
+@media screen and  (max-width: 1080px) {
+  .about-dashboard{
+    padding: 30px 20px !important;
+  }
+}
+@media screen and  (max-width: 720px) {
+  .about-dashboard{
+    padding: 20px 10px !important;
+  }
+  .about-dashboard-ul{
+    padding: 10px 30px !important;
+  }
+}
+
+.about-us-link{
+  font-weight: 500;
+  color: #39A2DB;
+  text-decoration: none;
+}
+@keyframes zoominoutsinglefeatured {
+  0% {
+      transform: scale(1,1);
+  }
+  50% {
+      transform: scale(1.2,1.2);
+  }
+  100% {
+      transform: scale(1,1);
+  }
+}
+.technologies:hover {
+  animation: zoominoutsinglefeatured 1s 1;
+}
+.link-item {
+  color: #39A2DB;
+  text-decoration: none;
+}
+
