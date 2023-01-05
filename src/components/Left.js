@@ -3,10 +3,10 @@ import { Link, NavLink, useMatch } from "react-router-dom";
 import { UilApps, UilChatBubbleUser } from "@iconscout/react-unicons";
 
 function Left() {
-  
+
   const dashboardMap = useMatch("/dashboard/:date");
 
-  let defaultDashboard = "/dashboard/" +  new Date().toLocaleDateString().replace(/\//g,"")
+  let defaultDashboard = "/dashboard/" + new Date().toLocaleDateString().replace(/\//g, "")
 
   const tabs = [
     {

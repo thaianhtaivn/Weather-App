@@ -1,12 +1,14 @@
-import { React, useState, useEffect, Fragment} from "react";
+import { React, useState, useEffect, Fragment } from "react";
 import Parameters from "./Parameters";
-import { UilMapMarker, UilTemperatureHalf, UilTemperatureEmpty,UilTemperature } from '@iconscout/react-unicons'
+import { UilMapMarker, UilTemperatureHalf, UilTemperatureEmpty, UilTemperature } from '@iconscout/react-unicons'
 import SearchBar from "./SearchBar";
-import {OpenWeatherApiUrl, OpenWeatherApiKey} from '../api/Api'
+import { OpenWeatherApiUrl, OpenWeatherApiKey } from '../api/Api'
 import Select from 'react-select'
 import { DateTime } from "luxon";
 
-function Middle({day}) {
+function Middle({ day }) {
+
+  const defaultCity = { value: '10.82302 106.62965', label: 'Ho Chi Minh City, VN' };
 
   const [dict, setDict] = useState();
   const [dataOfDay, setDataOfDay] = useState();
@@ -15,13 +17,13 @@ function Middle({day}) {
 
   const dateOnly = (dt, timezone, format = "cccc dd LLL yyyy") => DateTime.fromSeconds(dt).setZone("local").toFormat(format);
   const timeOnly = (dt, timezone, format = "hh:mm a") => DateTime.fromSeconds(dt).setZone("local").toFormat(format);
-  
-  const getDataDictionary=(location,currentWeather,forecast)=>{
-    
-    let dict = {  }
+
+  const getDataDictionary = (location, currentWeather, forecast) => {
+
+    let dict = {}
     const getKey = (timestamp) => {
-      let date = new Date(timestamp*1000);
-      date = date.toLocaleDateString().replace(/\//g,"")
+      let date = new Date(timestamp * 1000);
+      date = date.toLocaleDateString().replace(/\//g, "")
       return date
     }
 
@@ -45,10 +47,10 @@ function Middle({day}) {
     let childDict = {} //hourley
     childDict[obj.time] = obj
     dict[key] = childDict;
-    dict[key]["timeList"]= [obj.time]
-    
+    dict[key]["timeList"] = [obj.time]
+
     forecast.list.forEach((listItem) => {
-      
+
       let key = getKey(listItem.dt) //date key
       let obj = {
         date: dateOnly(listItem.dt),
@@ -64,30 +66,29 @@ function Middle({day}) {
         humidity: listItem.main.humidity,
         pressure: listItem.main.pressure,
       }
-      
-       if(dict[key]){ // exist
+
+      if (dict[key]) { // exist
         dict[key][obj.time] = obj;
         dict[key]["timeList"].push(obj.time)
-       }
-       else { //new //hourley
+      }
+      else { //new //hourley
         let childDict = {}
         childDict[obj.time] = obj
         dict[key] = childDict;
         dict[key]["timeList"] = [obj.time]
-       }
+      }
 
     });
     return dict
   }
 
-  const getDataByDate = (dict,date) => {
+  const getDataByDate = (dict, date) => {
     const dataOfDay = dict[date]
     return dataOfDay
   }
 
-  const getDataByTime = (dataOfDay,time) => {
-    if (time === null)
-    {
+  const getDataByTime = (dataOfDay, time) => {
+    if (time === null) {
       time = dataOfDay.timeList[0]
     }
     const dashboard = dataOfDay[time]
@@ -95,6 +96,7 @@ function Middle({day}) {
   }
 
   const handleSearchChange = (searchData) => {
+    console.log(searchData);
     const [latitude, longitude] = searchData.value.split(" ");
 
     const currentWeatherApiCall = fetch(
@@ -108,70 +110,75 @@ function Middle({day}) {
       .then(async (response) => {
         const currentWeatherApiCall_Response = await response[0].json();
         const forecastWeatherApiCall_Response = await response[1].json();
-        
-        const data = getDataDictionary(searchData.label,currentWeatherApiCall_Response,forecastWeatherApiCall_Response)
+
+        const data = getDataDictionary(searchData.label, currentWeatherApiCall_Response, forecastWeatherApiCall_Response)
         setDict(data)
       })
       .catch((error) => console.log(error));
   };
 
-  useEffect(()=>{//set data of day when click on right navbar
-    if(dict){
+  useEffect(() => {//set data of day when click on right navbar
+    if (dict) {
       const dataOfToday = getDataByDate(dict, day)
       setDataOfDay(dataOfToday)
       setTime(dataOfToday.timeList[0])
     }
-  },[dict,day])
+  }, [dict, day])
 
-  useEffect(()=>{//set data of dashboard when click on right navbar
-    if(dataOfDay){
-      const dataOfDashboard = getDataByTime(dataOfDay,time)
+  useEffect(() => {//set data of dashboard when click on right navbar
+    if (dataOfDay) {
+      const dataOfDashboard = getDataByTime(dataOfDay, time)
       setDashboard(dataOfDashboard)
     }
-  },[dataOfDay,time])
+  }, [dataOfDay, time])
 
-  const GetTimeDropdown = (currentValue) => { 
+  useEffect(() => {
+    handleSearchChange(defaultCity);
+  }, [])
+
+
+  const GetTimeDropdown = (currentValue) => {
 
     const customStyles = {
       control: (provided, state) => ({
         ...provided,
         boxShadow: "none",
-        
+
       }),
       option: (provided, state) => ({
         ...provided,
         color: '#053742',
         backgroundColor: state.isFocused && "#A2DBFA",
-     })
+      })
     }
 
     var timeList = [];
-      dict[day].timeList.forEach(function(element) {
-      timeList.push({ label:element, value: element })
+    dict[day].timeList.forEach(function (element) {
+      timeList.push({ label: element, value: element })
     });
 
     const handleTimeChange = (inputValue) => {
       setTime(inputValue.value)
     };
 
-    return(
+    return (
       <Fragment>
-        <Select 
-        className="time-dropdown" 
-        options={timeList} 
-        styles={customStyles} 
-        value={timeList.filter(function(option) {
-          return option.value === time;
-        })} 
-        onChange={handleTimeChange} />
+        <Select
+          className="time-dropdown"
+          options={timeList}
+          styles={customStyles}
+          value={timeList.filter(function (option) {
+            return option.value === time;
+          })}
+          onChange={handleTimeChange} />
       </Fragment>
-    ) 
+    )
   }
 
-  
+
   return (
     <div className="col-md-7 col-sm-7 middle-col p-5">
-      
+
       <div className="d-flex flex-column px-4">
 
         <SearchBar onSearchChange={handleSearchChange}></SearchBar>
@@ -179,59 +186,59 @@ function Middle({day}) {
         {
           dashboard &&
           <div className="row dashboard shadow-sm p-3">
-          <div className="col-md-8 my-2">
-            <div className="row my-2">
-              <div className="col-md-6 col-sm-6 text-center py-2">
-                <div className="m-0 logo"><UilMapMarker size="30" color="#053742"/>{dashboard.city}</div>
+            <div className="col-md-8 my-2">
+              <div className="row my-2">
+                <div className="col-md-6 col-sm-6 text-center py-2">
+                  <div className="m-0 logo"><UilMapMarker size="30" color="#053742" />{dashboard.city}</div>
+                </div>
+                <div className="col-md-6 col-sm-6 text-center py-2">
+                  <div>
+                    <p className="m-0">{dashboard.date}</p>
+                    <GetTimeDropdown></GetTimeDropdown>
+                  </div>
+                </div>
               </div>
-              <div className="col-md-6 col-sm-6 text-center py-2">
-                <div>
-                  <p className="m-0">{dashboard.date}</p>
-                  <GetTimeDropdown></GetTimeDropdown>
+
+              <div className="row my-2">
+                <div className="col-md-12 text-center my-auto">
+                  <h1 className="m-0"><UilTemperatureHalf size="30" color="#053742" />{dashboard.temperature}°C</h1>
+                  <h4 className="m-0">{dashboard.weather}</h4>
+                  <p className="text-muted">{dashboard.description}</p>
+                </div>
+              </div>
+
+              <div className="row my-2">
+                <div className="col-md-6 col-sm-6 text-center py-2">
+                  <p className="my-auto"><UilTemperatureEmpty size="20" color="#053742" />Min temp: {dashboard.min_temperature}°</p>
+                </div>
+                <div className="col-md-6 col-sm-6 text-center py-2">
+                  <p className="my-auto"><UilTemperature size="20" color="#053742" /> Max temp: {dashboard.max_temperature}°</p>
                 </div>
               </div>
             </div>
 
-            <div className="row my-2">
-              <div className="col-md-12 text-center my-auto">
-                <h1 className="m-0"><UilTemperatureHalf size="30" color="#053742"/>{dashboard.temperature}°C</h1>
-                <h4 className="m-0">{dashboard.weather}</h4>
-                <p className="text-muted">{dashboard.description}</p>
-              </div>
-            </div>
-
-            <div className="row my-2">
-              <div className="col-md-6 col-sm-6 text-center py-2">
-                <p className="my-auto"><UilTemperatureEmpty size="20" color="#053742" />Min temp: {dashboard.min_temperature}°</p>
-              </div>
-              <div className="col-md-6 col-sm-6 text-center py-2">
-                <p className="my-auto"><UilTemperature size="20" color="#053742" /> Max temp: {dashboard.max_temperature}°</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="col-md-4 my-2 d-flex align-items-center justify-content-center px-0">
-            <div className="row">
-              <div className="col-md-12">
-                <div className="weather-image-div">
-                  <img
-                    className="weather-image img-fluid"
-                    src={`../weather-icons/${dashboard.icon}.png`}
-                    alt="Clouds"
-                  ></img>
+            <div className="col-md-4 my-2 d-flex align-items-center justify-content-center px-0">
+              <div className="row">
+                <div className="col-md-12">
+                  <div className="weather-image-div">
+                    <img
+                      className="weather-image img-fluid"
+                      src={`../weather-icons/${dashboard.icon}.png`}
+                      alt="Clouds"
+                    ></img>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
         }
 
         {
           dashboard &&
           <div className="row dashboard bg-blue shadow-sm">
 
-          <Parameters speed={dashboard.windspeed} humidity={dashboard.humidity} pressure = {dashboard.pressure}></Parameters>
-          
+            <Parameters speed={dashboard.windspeed} humidity={dashboard.humidity} pressure={dashboard.pressure}></Parameters>
+
           </div>
         }
 

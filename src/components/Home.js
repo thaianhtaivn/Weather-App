@@ -1,6 +1,7 @@
 import React from "react";
 
 function Home() {
+  let defaultDashboard = "/dashboard/" + new Date().toLocaleDateString().replace(/\//g, "")
   return (
     <div className="col-md-7 col-sm-7 middle-col p-5">
       <div className="d-flex flex-column px-4">
@@ -13,10 +14,11 @@ function Home() {
             <br></br>
             <p className="blockquote">
               Access current weather data for any location on Earth including
-              over 200,000 cities!. 5 day forecast is available at any location
-              on the globe. It includes weather forecast data with 3-hour step.
+              over 200,000 cities!
+              <br />5 day forecast is available at any location on the globe.
+              <br />It includes weather forecast data with 3-hour step.
             </p>
-            <p className="text-muted">Go to Dashboard and Type your city name in Search box</p>
+            <p className="text-muted">Go to <a href={defaultDashboard}>Dashboard</a> and Type your city name in Search box</p>
           </div>
         </div>
       </div>

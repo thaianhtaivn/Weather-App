@@ -8,13 +8,13 @@ function SearchBar({ onSearchChange }) {
     control: (provided, state) => ({
       ...provided,
       boxShadow: "none",
-      
+
     }),
     option: (provided, state) => ({
       ...provided,
       color: '#053742',
       backgroundColor: state.isFocused && "#A2DBFA",
-   })
+    })
   }
   const getCityList = (inputValue) => {
     return fetch(`${geoApiUrl}${inputValue}`, geoApiOptions)
@@ -24,7 +24,7 @@ function SearchBar({ onSearchChange }) {
           options: response.data.map((city) => {
             return {
               value: `${city.latitude} ${city.longitude}`,
-              label: `${city.name}, ${city.countryCode}`,
+              label: `${city.name}, ${city.country}`,
             };
           }),
         };
@@ -32,7 +32,6 @@ function SearchBar({ onSearchChange }) {
       .catch((err) => console.error(err));
   };
   const handleInputChange = (inputValue) => {
-    
     setSearchValue(inputValue);
     onSearchChange(inputValue);
   };

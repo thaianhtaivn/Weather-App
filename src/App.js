@@ -1,5 +1,5 @@
 import './App.css';
-import {Routes,Route} from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Left from './components/Left';
 import Middle from './components/Middle';
 import Right from './components/Right';
@@ -9,8 +9,8 @@ import { useState } from 'react';
 import Home from './components/Home';
 
 function App() {
-  
-  const [day, setDay] = useState(new Date().toLocaleDateString().replace(/\//g,""));
+
+  const [day, setDay] = useState(new Date().toLocaleDateString().replace(/\//g, ""));
 
   return (
     <div className="App app-container container-fluid">
@@ -18,13 +18,13 @@ function App() {
 
         <Left></Left>
 
-          <Routes>
-            <Route path="/" element={ <Home/> } exact></Route>
-            <Route path={"/dashboard/:date"} element={<Middle day={day}/>}></Route>
-            <Route path="/about" element={<About/>}></Route>
-            <Route path="*" element={<Message/>}></Route>
-          </Routes>
-        
+        <Routes>
+          <Route path="/" element={<Home />} ></Route>
+          <Route path={"/dashboard/:date"} element={<Middle day={day} />}></Route>
+          <Route path="/about" element={<About />}></Route>
+          <Route path="*" element={<Message />}></Route>
+        </Routes>
+
         <Right setDay={setDay}></Right>
 
       </div>
